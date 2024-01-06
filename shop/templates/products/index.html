@@ -1,0 +1,212 @@
+{% extends 'layout.html' %}
+{% block content %}
+   {% include 'navbar.html' %}
+    <div class="container">
+          <div class="row">
+          <!-------Hiển thị sản phẩm theo Brand==========================--->
+          {% if get_brand_prod %}
+             {% for b in get_brand_prod.items %}
+              <div class="col-md-3">
+                  <div class="card">
+                      <img src="{{ url_for('static', filename='images/' +b.image1)}}" alt="{{ b.name }}" class="card-img-top"
+                      height="200">
+                      <div class="card-body">
+                          {% if b.discount > 0 %}
+                              <h5 style="text-shadow: 1px 1px 2px #000; color: #F00; transform: rotate(-15deg); position: absolute; top: 20%; left: 20%;">Discount {{ b.discount }} %</h5>
+                          {% endif %}
+                          <h5 class="text-center">{{ b.name }}</h5>
+                          <p class="text-center"> Price ${{ b.price }}</p>
+                      </div>
+                      <div class="cart-footer">
+                          <a href="{{ url_for('single_page', id=b.id) }}" class="float-left btn btn-sm btn-primary"> detais</a>
+                           <form action="{{ url_for('AddCart') }}" method="post">
+                                <input type="hidden" name="product_id" value="{{ b.id }}">
+                                <button type="submit" class="btn btn-sm btn-warning float-right">Add Cart</button>
+
+                                <input type="hidden" name="quantity" id="" value="1">
+            {#                    Chia colors từ chuỗi (red, blue, black) ra ("red", "blue", "black") #}
+                                {% set colors = b.colors.split(',') %}
+
+                                <select  name="colors" id="colors" style="visibility: hidden;">
+                                    {% for color in colors %}
+            {#                            Tách list color ra nhiều list  như kiểu [red: #f000], [blue: #f0239] để hiển thị tên màu và viết hoa chữ cái đầu tiên (capitalize) #}
+                                        {% set col = color.split(':') %}
+                                        <option value="{{ col[0]}}">{{ col[0]|capitalize }}</option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                      </div>
+                  </div>
+              </div>
+              {% endfor %}
+          </div>
+
+               <div class="row">
+            <div class="col text-center">
+
+             {% if get_brand_prod.has_prev %}
+                 <a href="{{ url_for('get_brand', id=get_brand.id, page=get_brand_prod.prev_num) }}" class="btn btn-outline-info btn-sm mt-3">Previous</a>
+             {% endif %}
+{#           Thưc hiện dánh số trang, nếu sản phẩm theo brand > 8 thì mới phân trang, còn < 8 thì ko đánh dấu trang chỉ để 1 trang duy nhất, không đánh số#}
+             {% if get_brand_prod.total > 8 %}
+{#             Hiển thị đánh dấu trang sp theo Brand(các sản phẩm còn hàng)#}
+              {% for page_num in get_brand_prod.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=2) %}
+                  {% if page_num %}
+{#                  Nếu trang hiện tại đang được hiển thị (được xác định bằng get_brand_prod.page == page_num), nút sẽ có lớp CSS btn-info (nền màu thông tin) và có màu nền đậm.    #}
+                  {% if get_brand_prod.page == page_num %}
+                  <a href="{{ url_for('get_brand', id=get_brand.id, page=page_num) }}" class="btn btn-info btn-sm mt-3">{{ page_num }}</a>
+{#                  Nếu trang không phải là trang hiện tại, nút sẽ có lớp CSS btn-outline-info (nền màu thông tin với viền) và có màu chữ thông tin, không có màu nền.    #}
+                  {% else %}
+                  <a href="{{ url_for('get_brand', id=get_brand.id, page=page_num) }}" class="btn btn-outline-info btn-sm mt-3">{{ page_num }}</a>
+                  {% endif %}
+                  {% else %}
+                      ...
+                  {% endif %}
+              {% endfor %}
+             {% endif %}
+             {% if get_brand_prod.has_next %}
+                 <a href="{{ url_for('get_brand', id=get_brand.id, page=get_brand_prod.next_num) }}" class="btn btn-outline-info btn-sm mt-3">Next</a>
+             {% endif %}
+            </div>
+          </div>
+
+
+          <div class="row">
+              <!-------Hiển thị sản phẩm theo Category==========================--->
+          {% elif get_cate_prod %}
+              {% for cate in get_cate_prod.items %}
+                  <div class="col-md-3">
+                  <div class="card">
+                      <img src="{{ url_for('static', filename='images/' +cate.image1)}}" alt="{{ cate.name }}" class="card-img-top"
+                      height="200">
+                      <div class="card-body">
+                          {% if cate.discount > 0 %}
+                              <h5 style="text-shadow: 1px 1px 2px #000; color: #F00; transform: rotate(-15deg); position: absolute; top: 20%; left: 20%;">Discount {{ cate.discount }} %</h5>
+                          {% endif %}
+                          <h5 class="text-center">{{ cate.name }}</h5>
+                          <p class="text-center"> Price ${{ cate.price }}</p>
+                      </div>
+                      <div class="cart-footer">
+                          <a href="{{ url_for('single_page',id=cate.id) }}" class="float-left btn btn-sm btn-primary"> detais</a>
+
+                          <form action="{{ url_for('AddCart') }}" method="post">
+                                <input type="hidden" name="product_id" value="{{ cate.id }}">
+                                <button type="submit" class="btn btn-sm btn-warning float-right">Add Cart</button>
+
+                                <input type="hidden" name="quantity" id="" value="1">
+            {#                    Chia colors từ chuỗi (red, blue, black) ra ("red", "blue", "black") #}
+                                {% set colors = cate.colors.split(',') %}
+
+                                <select  name="colors" id="colors" style="visibility: hidden;">
+                                    {% for color in colors %}
+            {#                            Tách list color ra nhiều list  như kiểu [red: #f000], [blue: #f0239] để hiển thị tên màu và viết hoa chữ cái đầu tiên (capitalize) #}
+                                        {% set col = color.split(':') %}
+                                        <option value="{{ col[0]}}">{{ col[0]|capitalize }}</option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                      </div>
+                  </div>
+              </div>
+              {% endfor %}
+          </div>
+
+               <div class="row">
+            <div class="col text-center">
+
+             {% if get_cate_prod.has_prev %}
+                 <a href="{{ url_for('get_cate', id=get_cat.id, page=get_cate_prod.prev_num) }}" class="btn btn-outline-info btn-sm mt-3">Previous</a>
+             {% endif %}
+{#           Thưc hiện dánh số trang, nếu sản phẩm theo cate > 8 thì mới phân trang, còn < 8 thì ko đánh dấu trang chỉ để 1 trang duy nhất, không đánh số#}
+             {% if get_cate_prod.total > 8 %}
+{#             Hiển thị đánh dấu trang sp theo Category(các sản phẩm còn hàng)#}
+              {% for page_num in get_cate_prod.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=2) %}
+                  {% if page_num %}
+{#                  Nếu trang hiện tại đang được hiển thị (được xác định bằng get_cate_prod.page == page_num), nút sẽ có lớp CSS btn-info (nền màu thông tin) và có màu nền đậm.    #}
+                  {% if get_cate_prod.page == page_num %}
+                  <a href="{{ url_for('get_cate',id=get_cat.id, page=page_num) }}" class="btn btn-info btn-sm mt-3">{{ page_num }}</a>
+{#                  Nếu trang không phải là trang hiện tại, nút sẽ có lớp CSS btn-outline-info (nền màu thông tin với viền) và có màu chữ thông tin, không có màu nền.    #}
+                  {% else %}
+                  <a href="{{ url_for('get_cate',id=get_cat.id, page=page_num) }}" class="btn btn-outline-info btn-sm mt-3">{{ page_num }}</a>
+                  {% endif %}
+                  {% else %}
+                      ...
+                  {% endif %}
+              {% endfor %}
+              {% endif %}
+             {% if get_cate_prod.has_next %}
+                 <a href="{{ url_for('get_cate',id=get_cat.id, page=get_cate_prod.next_num) }}" class="btn btn-outline-info btn-sm mt-3">Next</a>
+             {% endif %}
+            </div>
+          </div>
+          <div class="row">
+              <!-------Hiển thị sản phẩm theo Stock > 0==========================--->
+          {% else %}
+              {% for product in products.items %}
+              <div class="col-md-3">
+                  <div class="card">
+                      <img src="{{ url_for('static', filename='images/' +product.image1)}}" alt="{{ product.name }}" class="card-img-top"
+                      height="200">
+                      <div class="card-body">
+                          {% if product.discount > 0 %}
+                              <h5 style="text-shadow: 1px 1px 2px #000; color: #F00; transform: rotate(-15deg); position: absolute; top: 20%; left: 20%;">Discount {{ product.discount }} %</h5>
+                          {% endif %}
+                          <h5 class="text-center">{{ product.name }}</h5>
+                          <p class="text-center"> Price ${{ product.price }}</p>
+                      </div>
+                      <div class="cart-footer">
+                          <a href="{{ url_for('single_page', id=product.id) }}" class="float-left btn btn-sm btn-primary"> detais</a>
+                          <form action="{{ url_for('AddCart') }}" method="post">
+                                <input type="hidden" name="product_id" value="{{ product.id }}">
+                                <button type="submit" class="btn btn-sm btn-warning float-right">Add Cart</button>
+
+                                <input type="hidden" name="quantity" id="" value="1" min="1" >
+            {#                    Chia colors từ chuỗi (red, blue, black) ra ("red", "blue", "black") #}
+                                {% set colors = product.colors.split(',') %}
+
+                                <select  name="colors" id="colors" style="visibility: hidden;">
+                                    {% for color in colors %}
+            {#                            Tách list color ra nhiều list  như kiểu [red: #f000], [blue: #f0239] để hiển thị tên màu và viết hoa chữ cái đầu tiên (capitalize) #}
+                                        {% set col = color.split(':') %}
+                                        <option value="{{ col[0]}}">{{ col[0]|capitalize }}</option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                      </div>
+                  </div>
+              </div>
+
+              {% endfor %}
+          </div>
+          <div class="row">
+            <div class="col text-center">
+
+             {% if products.has_prev %}
+                 <a href="{{ url_for('home', page=products.prev_num) }}" class="btn btn-outline-info btn-sm mt-3">Previous</a>
+             {% endif %}
+{#           Thưc hiện dánh số trang, nếu sản phẩm  > 8 thì mới phân trang, còn < 8 thì ko đánh dấu trang chỉ để 1 trang duy nhất, không đánh số#}
+             {% if products.total > 8 %}
+{#             Hiển thị đánh dấu trang products(các sản phẩm còn hàng)#}
+              {% for page_num in products.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=2) %}
+                  {% if page_num %}
+{#                  Nếu trang hiện tại đang được hiển thị (được xác định bằng products.page == page_num), nút sẽ có lớp CSS btn-info (nền màu thông tin) và có màu nền đậm.    #}
+                  {% if products.page == page_num %}
+                  <a href="{{ url_for('home', page=page_num) }}" class="btn btn-info btn-sm mt-3">{{ page_num }}</a>
+{#                  Nếu trang không phải là trang hiện tại, nút sẽ có lớp CSS btn-outline-info (nền màu thông tin với viền) và có màu chữ thông tin, không có màu nền.    #}
+                  {% else %}
+                  <a href="{{ url_for('home', page=page_num) }}" class="btn btn-outline-info btn-sm mt-3">{{ page_num }}</a>
+                  {% endif %}
+                  {% else %}
+                      ...
+                  {% endif %}
+              {% endfor %}
+              {% endif %}
+             {% if products.has_next %}
+                 <a href="{{ url_for('home', page=products.next_num) }}" class="btn btn-outline-info btn-sm mt-3">Next</a>
+             {% endif %}
+            </div>
+          </div>
+          {% endif %}
+      </div>
+    </div>
+{% endblock %}
