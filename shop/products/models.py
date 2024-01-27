@@ -2,6 +2,8 @@ from shop import db
 from datetime import datetime
 
 
+
+
 class Addproduct(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
@@ -24,7 +26,9 @@ class Addproduct(db.Model):
 
 
     def __repr__(self):
-        return '<Addproduct %r' %self.name
+        return '<Addproduct %r>' %self.name
+
+
 
 
 class Brand(db.Model):
@@ -37,3 +41,5 @@ class Category(db.Model):
 
 
 db.create_all()
+
+

@@ -1,0 +1,108 @@
+{% extends 'layout.html' %}
+{% block content %}
+{% include 'navbar.html' %}
+    <div class="container">
+
+          <div class="row">
+              <!-------Hiển thị sản phẩm theo Stock > 0==========================--->
+              {% for product in products.items %}
+              <div class="col-md-3">
+                  <div class="card">
+                      <img src="{{ url_for('static', filename='images/' +product.image1)}}" alt="{{ product.name }}" class="card-img-top"
+                      height="200">
+                      <div class="card-body">
+                          {% if product.discount > 0 %}
+                              <h5 style="text-shadow: 1px 1px 2px #000; color: #F00; transform: rotate(-15deg); position: absolute; top: 20%; left: 20%;">Discount {{ product.discount }} %</h5>
+                          {% endif %}
+                          <h5 class="text-center">{{ product.name }}</h5>
+                          <p class="text-center"> Price ${{ product.price }}</p>
+                      </div>
+                      <div class="cart-footer">
+                          <a href="{{ url_for('single_page', id=product.id) }}" class="float-left btn btn-sm btn-primary"> detais</a>
+                          <form action="{{ url_for('AddCart') }}" method="post">
+                                <input type="hidden" name="product_id" value="{{ product.id }}">
+                                <button type="submit" class="btn btn-sm btn-warning float-right">Add Cart</button>
+
+                                <input type="hidden" name="quantity" id="" value="1" min="1" >
+{#                                Chia colors từ chuỗi (red, blue, black) ra ("red", "blue", "black")#}
+                                {% set colors = product.colors.split(',') %}
+
+                                <select  name="colors" id="colors" style="visibility: hidden;">
+                                    {% for color in colors %}
+{#                                        Tách list color ra nhiều list  như kiểu [red: #f000], [blue: #f0239] để hiển thị tên màu và viết hoa chữ cái đầu tiên (capitalize)#}
+                                        {% set col = color.split(':') %}
+                                        <option value="{{ col[0]}}">{{ col[0]|capitalize }}</option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                      </div>
+                  </div>
+              </div>
+
+              {% endfor %}
+          </div>
+          <div class="row">
+            <div class="col text-center">
+
+             {% if products.has_prev %}
+                 <a href="{{ url_for('home', page=products.prev_num) }}" class="btn btn-outline-info btn-sm mt-3">Previous</a>
+             {% endif %}
+{#           Thưc hiện dánh số trang, nếu sản phẩm  > 8 thì mới phân trang, còn < 8 thì ko đánh dấu trang chỉ để 1 trang duy nhất, không đánh số#}
+             {% if products.total > 8 %}
+{#             Hiển thị đánh dấu trang products(các sản phẩm còn hàng)#}
+              {% for page_num in products.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=2) %}
+                  {% if page_num %}
+{#                  Nếu trang hiện tại đang được hiển thị (được xác định bằng products.page == page_num), nút sẽ có lớp CSS btn-info (nền màu thông tin) và có màu nền đậm.#}
+                  {% if products.page == page_num %}
+                  <a href="{{ url_for('home', page=page_num) }}" class="btn btn-info btn-sm mt-3">{{ page_num }}</a>
+{#                  Nếu trang không phải là trang hiện tại, nút sẽ có lớp CSS btn-outline-info (nền màu thông tin với viền) và có màu chữ thông tin, không có màu nền.#}
+                  {% else %}
+                  <a href="{{ url_for('home', page=page_num) }}" class="btn btn-outline-info btn-sm mt-3">{{ page_num }}</a>
+                  {% endif %}
+                  {% else %}
+                      ...
+                  {% endif %}
+              {% endfor %}
+
+             {% if products.has_next %}
+                 <a href="{{ url_for('home', page=products.next_num) }}" class="btn btn-outline-info btn-sm mt-3">Next</a>
+             {% endif %}
+            </div>
+          </div>
+          {% endif %}
+      </div>
+    </div>
+
+     <div id="footer-container" style="{
+    position: fixed;
+    bottom: 50%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    display: none; /* Ẩn footer ban đầu */
+    /* Thêm các kiểu CSS khác tùy thuộc vào thiết kế của bạn */
+}">
+        {% include 'footer.html' %}
+    </div>
+
+    <script>
+        // Lắng nghe sự kiện cuộn chuột
+        window.addEventListener('scroll', function() {
+            // Lấy chiều cao của cửa sổ trình duyệt
+            var windowHeight = window.innerHeight;
+
+            // Lấy vị trí hiện tại của cuộn chuột
+            var scrollPosition = window.scrollY || document.documentElement.scrollTop;
+
+            // Lấy chiều cao của phần tử footer
+            var footerHeight = document.getElementById('footer-container').offsetHeight;
+
+            // Hiển thị hoặc ẩn footer dựa trên vị trí cuộn chuột
+            if (scrollPosition + windowHeight >= document.body.offsetHeight - footerHeight) {
+                document.getElementById('footer-container').style.display = 'block';
+            } else {
+                document.getElementById('footer-container').style.display = 'none';
+            }
+        });
+    </script>
+
+{% endblock %}

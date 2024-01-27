@@ -6,7 +6,7 @@ class Addproducts(Form):
     price = DecimalField('Price', [validators.DataRequired()])
     discount = IntegerField('Discount', default=0)
     stock = IntegerField('Stock', [validators.DataRequired()])
-    discription = TextAreaField('Discription', [validators.DataRequired()])
+    description = TextAreaField('Description', [validators.DataRequired()])
     colors = TextAreaField('Colors', [validators.DataRequired()])
 
     image_1 = FileField('Image 1', validators=[FileAllowed(['jpg', 'png', 'gif', 'jpeg'])])

@@ -63,4 +63,37 @@
         }
     </script>
 
+
+     <div id="footer-container" style="{
+    position: fixed;
+    bottom: 50%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    display: none; /* Ẩn footer ban đầu */
+    /* Thêm các kiểu CSS khác tùy thuộc vào thiết kế của bạn */
+}">
+        {% include 'footer.html' %}
+    </div>
+
+    <script>
+        // Lắng nghe sự kiện cuộn chuột
+        window.addEventListener('scroll', function() {
+            // Lấy chiều cao của cửa sổ trình duyệt
+            var windowHeight = window.innerHeight;
+
+            // Lấy vị trí hiện tại của cuộn chuột
+            var scrollPosition = window.scrollY || document.documentElement.scrollTop;
+
+            // Lấy chiều cao của phần tử footer
+            var footerHeight = document.getElementById('footer-container').offsetHeight;
+
+            // Hiển thị hoặc ẩn footer dựa trên vị trí cuộn chuột
+            if (scrollPosition + windowHeight >= document.body.offsetHeight - footerHeight) {
+                document.getElementById('footer-container').style.display = 'block';
+            } else {
+                document.getElementById('footer-container').style.display = 'none';
+            }
+        });
+    </script>
+
 {% endblock content %}

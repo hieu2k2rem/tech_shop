@@ -1,7 +1,8 @@
- <!-------navbar starts==========================--->
+
+<!-------navbar starts==========================--->
     <div class="container">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <a class="navbar-brand" href="#">Navbar</a>
+          <a class="navbar-brand" href="{{ url_for('home') }}">TechShop</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -9,7 +10,7 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
               <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{{ url_for('home') }}">Home <span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/">All Product</a>
@@ -35,15 +36,99 @@
                   {% endfor %}
                 </div>
               </li>
+            {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a href="{{ url_for('customer_logout') }}" class="nav-link">{{ current_user.name }}</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('customer_logout') }}" class="nav-link">Log out</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a href="{{ url_for('customer_register') }}" class="nav-link">Sign up</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('customerLogin') }}" class="nav-link">Log in</a>
+                </li>
+            {% endif %}
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('getCart') }}" tabindex="-1" >Cart ({{ session['Shoppingcart']|length }})</a>
               </li>
+
+            <li class="nav-item">
+                    <a href="{{ url_for('login') }}" class="nav-link"><i class="fas fa-user-shield"></i> Admin</a>
+                </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <form class="form-inline my-2 my-lg-0" action="{{ url_for('result') }}">
+              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">
               <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
+
+
           </div>
         </nav>
+{#    <img class="background-image" src="https://shop.daisycomms.co.uk/wp-content/uploads/2023/09/Apple-iPhone-15-promo-banner-buy-now-scaled.jpg" alt="Banner" style=" width: 100%; /* Đặt chiều rộng bằng với navbar */#}
+{#        max-height: 200px; /* Đặt chiều cao tối đa nếu cần */#}
+{#        object-fit: cover; /* Đảm bảo hình ảnh không bị biến dạng */">#}
+
+    <!-- Carousel -->
+    <div id="imageCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <a href="/brand/15">
+                <img class="d-block w-100" src="https://www.ptcshop.com.au/cdn/shop/collections/Collection-banner_8551fbc7-79ed-4316-947b-ccb20913ea10.jpg?v=1675302791&width=2048" alt="Samsung slide" style="width: 100%; /* Đặt chiều rộng bằng với navbar */
+        max-height: 400px; /* Đặt chiều cao tối đa nếu cần */
+        object-fit: cover;">
+                    </a>
+            </div>
+            <div class="carousel-item">
+                <a href="/brand/14">
+                <img class="d-block w-100" src="https://mir-s3-cdn-cf.behance.net/project_modules/1400_webp/34b5bf180145769.6505ae7623131.jpg" alt="Apple slide" style="width: 100%; /* Đặt chiều rộng bằng với navbar */
+        max-height: 400px; /* Đặt chiều cao tối đa nếu cần */
+        object-fit: cover;">
+                </a>
+            </div>
+            <div class="carousel-item ">
+                <a href="/brand/16">
+                <img class="d-block w-100" src="https://i05.appmifile.com/313_operatorx_operatorx_uploadTiptapImage/17/02/2022/e0f0f3490abdcfc9bc1e95c2b6ba4a0a.jpg" alt="Xiaomi slide" style="width: 100%; /* Đặt chiều rộng bằng với navbar */
+        max-height: 400px; /* Đặt chiều cao tối đa nếu cần */
+        object-fit: cover;">
+                    </a>
+            </div>
+            <div class="carousel-item ">
+                <a href="/category/19">
+                <img class="d-block w-100" src="https://i.pinimg.com/originals/ef/80/83/ef8083bfe79088dc00bd8eca9c821cd5.jpg" alt="Laptop slide" style="width: 100%; /* Đặt chiều rộng bằng với navbar */
+        max-height: 400px; /* Đặt chiều cao tối đa nếu cần */
+        object-fit: cover;">
+                    </a>
+            </div>
+            <div class="carousel-item ">
+                <a href="/category/17">
+                <img class="d-block w-100" src="https://boldtechinfo.com/wp-content/uploads/2019/12/mobile.png" alt="Mobile slide" style="width: 100%; /* Đặt chiều rộng bằng với navbar */
+        max-height: 400px; /* Đặt chiều cao tối đa nếu cần */
+        object-fit: cover;">
+                    </a>
+            </div>
+            <div class="carousel-item ">
+                <a href="/category/18">
+                <img class="d-block w-100" src="https://i0.wp.com/store.ave.com.bn/wp-content/uploads/2022/03/iPad_Air_Web_Banner_Avail_1400x700__SEA_FFH.png?fit=1400%2C700&ssl=1" alt="Tablet slide" style="width: 100%; /* Đặt chiều rộng bằng với navbar */
+        max-height: 400px; /* Đặt chiều cao tối đa nếu cần */
+        object-fit: cover;">
+                    </a>
+            </div>
+            <!-- Thêm các ảnh khác tương tự -->
+
+        </div>
+        <a class="carousel-control-prev" href="#imageCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#imageCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
     </div>
+
+    </div>
+<br>
     <!-------navbar ends==========================--->
